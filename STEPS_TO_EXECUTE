@@ -1,0 +1,24 @@
+**MOST IMPORTANT**
+Model Limitations:-
+1.The model was trained on a very limited dataset consisting of 10 blurry videos and their corresponding clear versions. This was due to hardware constraints, as training large deep learning models typically requires high-performance GPUs/TPUs and access to extensive computational resources, which were not available during development.
+
+2.Given the small dataset, the model’s generalization ability is restricted. It may work well on videos that are similar in nature to the training set (i.e., CCTV-like footage or videos where human faces are the primary subject), but its performance on significantly different video content may be less consistent.
+
+3.The model performs best on videos with moderate blur and similar lighting conditions as the training videos. If the input video has extreme motion blur, unusual lighting, or complex scenes, the model may not fully restore clarity or might struggle with enhancing facial features.
+
+4.Since deep learning models typically benefit from larger and more diverse datasets, results might vary widely for videos with different environments, camera qualities, or blur patterns than those in the training data. This is an inherent limitation caused by the training process being constrained by the available resources.
+
+Notes and Tips:-
+1.Resource Limitations: Due to the lack of access to a high-performance PC or cloud services with premium GPU/TPU instances, the model was trained on a modest dataset. Ideally, a larger dataset and more powerful hardware would allow for significantly better results. However, the model still demonstrates improvement on videos that closely resemble the training set.
+
+2.GPU Usage: If you have access to a GPU, TensorFlow will automatically utilize it for faster video processing, which can greatly improve performance. On a CPU, however, the processing will be much slower, especially for longer video clips or high-resolution input, due to the model's computational demands.
+
+3.Performance Considerations: When running the model on a CPU-only machine, expect slower processing times, particularly for videos longer than a few minutes. The inference speed will depend on the number of frames, video resolution, and overall system performance.
+
+4.Video Formats: Make sure that your input video is in a format that OpenCV can read, such as .mp4, .avi, or similar. If your video is in a different format, consider converting it using tools like ffmpeg before running the model. Converting videos into a more common format can help avoid compatibility issues.
+
+FOR EXECUTION:-----------
+Put the main.py and h5 file in same folder and make a change in input video in main.py. Use the address of the input video.
+
+
+
