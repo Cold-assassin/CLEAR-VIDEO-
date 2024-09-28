@@ -153,8 +153,8 @@ def train_model(blur_folder, clear_folder, num_epochs=100, batch_size=4):
 
 # Main execution
 if __name__ == "__main__":
-    blur_folder = r"C:\Users\prakh\OneDrive\Desktop\blur new"
-    clear_folder = r"C:\Users\prakh\OneDrive\Desktop\clear new"
+    blur_folder = r"PATH OF THE BLUR VIDEO"
+    clear_folder = r"PATH OF CLEEAR VIDEO"
     
     history = train_model(blur_folder, clear_folder)
     
