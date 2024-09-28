@@ -5,40 +5,37 @@ Training Phase: Where a neural network is trained on pairs of blurry and clear v
 Inference Phase: Where a trained model (either the one you trained or a pre-trained model) is used to process new blurry videos and generate deblurred outputs.
 These two phases are implemented through the training_model.py script (for training) and main.py (for inference).
 
-Key Components of the Model Architecture
+**Key Components of the Model Architecture**
 A. Encoder-Decoder CNN with Skip Connections
+
 Encoder:
+    The encoder part of the CNN extracts features from the blurry image frames.
+    It consists of multiple convolutional layers followed by max pooling layers. Each convolutional layer uses filters to learn image features like edges, textures, and complex patterns. The deeper you go into the encoder, the more abstract the features become.
+    At different stages, feature maps are downsampled using max-pooling to reduce the spatial resolution, allowing the model to learn hierarchical representations.
 
-The encoder part of the CNN extracts features from the blurry image frames.
-It consists of multiple convolutional layers followed by max pooling layers. Each convolutional layer uses filters to learn image features like edges, textures, and complex patterns. The deeper you go into the encoder, the more abstract the features become.
-At different stages, feature maps are downsampled using max-pooling to reduce the spatial resolution, allowing the model to learn hierarchical representations.
 Decoder:
+     The decoder takes the abstracted features from the encoder and progressively upscales them back to the original resolution using upsampling layers.
+     It uses skip connections to combine high-level features with low-level features from corresponding layers in the encoder. This helps the model retain fine details that would otherwise be lost during downsampling.
+     Finally, the output layer produces a clear image by using a convolution layer with a sigmoid activation to keep pixel values between 0 and 1 (normalized image).
 
-The decoder takes the abstracted features from the encoder and progressively upscales them back to the original resolution using upsampling layers.
-It uses skip connections to combine high-level features with low-level features from corresponding layers in the encoder. This helps the model retain fine details that would otherwise be lost during downsampling.
-Finally, the output layer produces a clear image by using a convolution layer with a sigmoid activation to keep pixel values between 0 and 1 (normalized image).
+
 B. Custom Loss Function with Perceptual Loss
 The model is trained using a custom loss function that consists of two components:
 
 Mean Squared Error (MSE) Loss:
+     This loss measures the pixel-wise difference between the predicted clear image and the actual clear image.
+     While effective, MSE loss may not capture fine details in the reconstructed image that are crucial for face reconstruction.
 
-This loss measures the pixel-wise difference between the predicted clear image and the actual clear image.
-While effective, MSE loss may not capture fine details in the reconstructed image that are crucial for face reconstruction.
+
 Perceptual Loss:
+     To address the limitations of pixel-wise loss, the system incorporates Perceptual Loss using a pre-trained VGG16 model.
+     Perceptual loss computes the difference between the features of the predicted image and the ground truth image at a high level, as extracted by a pre-trained model like VGG16.
+     The VGG16 model (pre-trained on ImageNet) extracts features from an intermediate layer (like block3_conv3), focusing on textures and fine details that are important for visual clarity, especially for facial features.
+     The intuition is that the VGG16 model has already learned useful feature representations for natural images, so the perceptual loss encourages the deblurred output to look more natural and realistic.
 
-To address the limitations of pixel-wise loss, the system incorporates Perceptual Loss using a pre-trained VGG16 model.
-Perceptual loss computes the difference between the features of the predicted image and the ground truth image at a high level, as extracted by a pre-trained model like VGG16.
-The VGG16 model (pre-trained on ImageNet) extracts features from an intermediate layer (like block3_conv3), focusing on textures and fine details that are important for visual clarity, especially for facial features.
-The intuition is that the VGG16 model has already learned useful feature representations for natural images, so the perceptual loss encourages the deblurred output to look more natural and realistic.
-The total loss is a weighted sum of MSE and perceptual loss: 
-Total Loss
-=
-MSE Loss
-+
-0.1
-×
-Perceptual Loss
-Total Loss=MSE Loss+0.1×Perceptual Loss
+     The total loss is a weighted sum of MSE and perceptual loss: 
+     Total Loss = MSE Loss + 0.1 × Perceptual Loss
+
 
 C. Pre-Trained VGG16 Model for Perceptual Loss
 The VGG16 model is not used to generate the deblurred images. Instead, it's a feature extractor used during the training process to calculate the perceptual loss.
@@ -46,3 +43,43 @@ How it works:
 The ground truth clear image and the predicted clear image are passed through the VGG16 network (up to block3_conv3).
 The perceptual difference between these feature maps is then computed and added to the total loss.
 VGG16 remains frozen (i.e., its weights are not updated during training) and is used only for feature extraction.
+
+
+                            +-----------------------+
+                            |   Blurry Video Input   |
+                            +-----------------------+
+                                      |
+                                      v
+                        +-----------------------------+
+                        |   CNN Deblurring Model      |
+                        |  (Encoder-Decoder with Skip |
+                        |       Connections)          |
+                        +-----------------------------+
+                                      |
+                                      v
+                  +-----------------------------------------+
+                  |   Predicted Clear Frame (Deblurred)     |
+                  +-----------------------------------------+
+                                      |
+                                      v
+   +------------------------------------------+     +-------------------------------------------+
+   |    MSE Loss (Pixel-wise Difference)      |     |   Perceptual Loss (Features from VGG16)   |
+   +------------------------------------------+     +-------------------------------------------+
+                                      |                          |
+                                      v                          v
+                             +------------------------------------------+
+                             |        Custom Loss Function              |
+                             | (Weighted sum of MSE and Perceptual Loss) |
+                             +------------------------------------------+
+                                      |
+                                      v
+                             +------------------+
+                             | Model Training   |
+                             +------------------+
+                                      |
+                                      v
+                  +-----------------------------------+
+                  |  Enhanced Deblurring Model Saved  |
+                  +-----------------------------------+
+
+
