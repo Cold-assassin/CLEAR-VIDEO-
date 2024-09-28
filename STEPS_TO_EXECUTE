@@ -18,7 +18,8 @@ Notes and Tips:-
 4.Video Formats: Make sure that your input video is in a format that OpenCV can read, such as .mp4, .avi, or similar. If your video is in a different format, consider converting it using tools like ffmpeg before running the model. Converting videos into a more common format can help avoid compatibility issues.
 
 FOR EXECUTION:-----------
-Put the main.py and h5 file in same folder and make a change in input video in main.py. Use the address of the input video.
+Put the main.py and h5 file in same folder and make  change in input video in main.py. Use the address of the input video and run the program.
 
+training_model.py file is also provided to train the model for more clarification and train the model on your own dataset.
 
 
