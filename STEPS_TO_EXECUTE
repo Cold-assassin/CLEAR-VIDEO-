@@ -19,6 +19,7 @@ Notes and Tips:-
 
 FOR EXECUTION:-----------
 Put the main.py and h5 file in same folder and make  change in input video in main.py. Use the address of the input video and run the program.
+h5 file can be downloaded from this drive link https://drive.google.com/file/d/1XGASEHXG2u4zFhPxAOt8Bpz8vt410Czw/view?usp=drive_link
 
 training_model.py file is also provided to train the model for more clarification and train the model on your own dataset.
 
